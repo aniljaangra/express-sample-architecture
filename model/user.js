@@ -3,10 +3,12 @@
  */
 
 // importing mongoose
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"),
+
+//================================================== Schema =========================================================
 
 // user model
-var userSchema = mongoose.Schema({
+userSchema = mongoose.Schema({
         userId: { type : String , index : { unique : true } },      // username of the user
         password: String,      // password of the user
         email : String,        // email of the user
@@ -19,5 +21,7 @@ var userSchema = mongoose.Schema({
     {
         timestamps: true
     });
+
+//==================================================Exports =========================================================
 
 module.exports = mongoose.model('User', userSchema, 'user');

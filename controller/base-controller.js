@@ -6,13 +6,11 @@ const _ = require("lodash");
 class BaseController{
 
     constructor(model){
-        console.log("constructor called")
         this.Model = model;
         _bindAll(this);
     }
 
     create( req , res ){
-        getData();
         this.Model.create( data )
             .then( result => req.app.sendSuccess( res , result ))
             .catch( error => req.app.throwError( res , error ))

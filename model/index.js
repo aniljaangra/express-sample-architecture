@@ -4,5 +4,5 @@
 
 module.exports = {
     User : require("./user"),
-    AccessToken : require("./accessToken")
+    AccessToken : require("./access-token")
 };

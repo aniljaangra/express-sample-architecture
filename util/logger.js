@@ -3,7 +3,7 @@
  */
 
 const _ = require('lodash'),
-    Exception = require("exception-generator");
+    Exception = require("./exception-generator");
 
 var seq = new Date().getTime();
 
