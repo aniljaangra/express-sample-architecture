@@ -19,6 +19,6 @@ require("./config/dao-config");
 require("./route");
 
 //Attach ErrorHandler to Handle All Errors
-app.use(require('./util/response-handler').handleError)
+app.use(require('./util/response-handler').handleError);
 
 app.listen( env.port || 3001 );

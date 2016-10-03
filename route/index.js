@@ -13,7 +13,7 @@ const express = require("express"),
 
 //Add Crud Operations
 crudify( User , v1Router , "/user" );
-v1Router.post( '/user/login' ,  passport.ldapAuth() , User.login );
+v1Router.post( '/user/login' ,  passport.ldapAuth , User.login );
 
 //mount to app
 app.use( v1Router );

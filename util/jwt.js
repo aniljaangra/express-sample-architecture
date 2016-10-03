@@ -11,6 +11,7 @@ const jwt = require('jsonwebtoken'),
     exceptions = require('./exception-generator'),
 
     TOKEN_EXPIRY = {
+        SHORT_LIVED : '2 days' ,            //time format from https://github.com/rauchg/ms.js
         LONG_LIVED : '365 days' ,            //for keep me logged in functionality.... time format from https://github.com/rauchg/ms.js
     };
 

@@ -3,5 +3,6 @@
  */
 
 module.exports = {
-    userService : require("./user-service")
+    userService : require("./user-service"),
+    accessTokenService : require("./access-token-service")
 }

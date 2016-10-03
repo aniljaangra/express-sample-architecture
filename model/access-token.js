@@ -10,8 +10,9 @@ const mongoose = require("mongoose"),
 
 // accessToken model
 accessTokenSchema = Schema({
-        userId: { type: Schema.Types.ObjectId, ref: 'User' },      // userId of the user
+        userId: String,      // userId of the user
         token : String,        // token containing user Data
+        lastUsedAt : Date
     },
     {
         timestamps: {

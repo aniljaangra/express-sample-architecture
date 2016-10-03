@@ -10,8 +10,17 @@ const userDao = require("../dao/user-dao"),
 
 module.exports = _.extend( util.constants.EMPTY_OBJECT , userDao ,
     {
-
-
+        generateUserToken
     });
 
 //================================================== Implementation ==================================================
+
+/**
+ * generate Token for user
+ * @private
+ */
+function generateUserToken(user , longLivedToken ){
+    var dataForToken = _.pick( user , [ 'userId' , 'email' ] );
+    //generate token .....
+    return util.jwt.generateToken(dataForToken , ( longLivedToken ? util.jwt.TOKEN_EXPIRY.LONG_LIVED : util.jwt.TOKEN_EXPIRY.LONG_LIVED ));
+}

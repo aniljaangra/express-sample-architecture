@@ -11,7 +11,7 @@ class BaseController{
     }
 
     create( req , res ){
-        this.Model.create( data )
+        this.Model.create( req.body )
             .then( result => req.app.sendSuccess( res , result ))
             .catch( error => req.app.throwError( res , error ))
     }

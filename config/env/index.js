@@ -10,7 +10,7 @@ var config = {
     port : 3001,
     db : {
         mongo : {
-            host : "mongodb://localhost:27017/timesheets",
+            host : "mongodb://localhost:27017/sample",
             userName : "",
             password : ""
         }
@@ -33,6 +33,5 @@ switch(process.env.NODE_ENV){
 _.extend( config , envConfig );
 
 console.log('Application Running in' , config.environment , 'Environment')
-
 
 module.exports = config;

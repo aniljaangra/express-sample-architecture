@@ -23,7 +23,8 @@ module.exports = { init , handleError , cors : setHeadersForCrossDomainIssues };
  * @param app
  */
 function init( app ) {
-    [app.sendSuccess , app.throwError ] = [ sendSuccess , throwError] ;
+    app.sendSuccess = sendSuccess ;
+    app.throwError = throwError ;
 }
 
 
@@ -49,8 +50,6 @@ function throwError(res , error) {
         httpStatus = HTTP_STATUS.SERVER_ERROR;
         error = exceptions.unhandledError( error );  //Custom Error
     }
-    //log error
-    logger.log(error);
     let response = new APIResponse( STATUS_CODE.ERROR , error );
     _sendResponse(res, response , httpStatus );
 }

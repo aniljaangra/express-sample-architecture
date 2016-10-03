@@ -4,7 +4,7 @@
 
 const _ = require("lodash"),
     crudMap = {
-        create : { method : "post" , url : "/add"},
+        create : { method : "post" , url : "/create"},
         update : { method : "post", url : "/update"},
         read : { method : "get", url : "/get"},
         delete : { method : "get", url : "/delete"}
