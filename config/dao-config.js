@@ -2,7 +2,7 @@
  * Created by thinksysuser on 26/9/16.
  */
 
-const dbConfig  = require("./env").db.mongo,
+const dbConfig  = require("./env").db.mongodb,
     mongoose = require('mongoose');
 
 mongoose.Promise = Promise;

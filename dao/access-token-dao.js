@@ -9,6 +9,6 @@ const AccessTokenModel = require("../model").AccessToken,
 
 //==================================================Exports =========================================================
 
-module.exports = { raw : AccessTokenModel };
+module.exports = { model : AccessTokenModel };
 
 //================================================== Implementation ==================================================

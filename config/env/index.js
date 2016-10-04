@@ -9,7 +9,7 @@ var config = {
     ip : 'localhost',
     port : 3001,
     db : {
-        mongo : {
+        mongodb : {
             host : "mongodb://localhost:27017/sample",
             userName : "",
             password : ""

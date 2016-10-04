@@ -12,6 +12,9 @@ module.exports = {
         APP_DESCRIPTION : 'Express App'
     },
 
+    mongodb : {
+        hidden : { createdAt : true , updatedAt : true , _id : true , __v : true }
+    },
 
     //Other Constants
     DO_NOTHING : null,

@@ -26,7 +26,7 @@ Environment based configurations
 
 ########################## controller
 
-Contains All API Endpoint Controllers
+Contains All API Endpoint Controllers . Basically Acts as Facade . Top Level Abstraction.
 
 ####### helper
 Controller Helpers for common Tasks
