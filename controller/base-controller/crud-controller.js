@@ -54,7 +54,7 @@ function _bindAll(object) {
     var propList =  _.without( objectMembers.concat(baseClassMembers) , "constructor" );
     //bind every function
     propList.forEach( function (property) {
-        if(object.__proto__[property]){
+        if(object.__proto__[property] && typeof object.__proto__[property] === "function"){
             object.__proto__[property] = object[property].bind(object);
         }
     })

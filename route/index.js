@@ -9,12 +9,13 @@ const express = require("express"),
     swagger = require("./swagger"),
     v1Router = express.Router(),
     //Controllers
-    User = require("../controller/user");
+    User = require("../controller/user"),
+    v1RouterPrx = require("./router-proxy")( v1Router , User );
 
 //Add Crud Operations
-crudify( User , v1Router , "/user" );
-v1Router.post( '/user/login' ,  passport.ldapAuth , User.login );
-v1Router.get( '/user/profile' ,  passport.verifyUser , User.profile );
+crudify( User , v1RouterPrx , "/user" );
+v1RouterPrx.post( '/user/login' ,  passport.ldapAuth , User.login );
+v1RouterPrx.get( '/user/profile' ,  passport.verifyUser , User.profile );
 
 //mount to app
-app.use( v1Router );
+app.use( v1RouterPrx.getRouter() );

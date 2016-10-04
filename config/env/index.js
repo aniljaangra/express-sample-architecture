@@ -32,6 +32,6 @@ switch(process.env.NODE_ENV){
 //Create Final Config JSON by extending env from default
 _.extend( config , envConfig );
 
-console.log('Application Running in' , config.environment , 'Environment')
+console.log('Application Running in' , config.environment , 'Environment');
 
 module.exports = config;

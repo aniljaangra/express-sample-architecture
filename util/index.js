@@ -9,5 +9,6 @@ module.exports = {
     exceptionGenerator : require("./exception-generator"),
     jwt : require("./jwt"),
     lodash : require("./lodash-mixin"),
+    methods : require("./methods"),
     responseHandler : require("./response-handler"),
 }
