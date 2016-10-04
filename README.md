@@ -2,9 +2,9 @@ Sample Express Architecture to be used as base for other Apps.
 
 ################################################ Directory Structure ############################################
 
-├── config\n
-│   └── env\n
-├── controller\n
+├── config
+│   └── env
+├── controller
 │   ├── helper
 │   └── base-controller
 ├── dao
