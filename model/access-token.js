@@ -17,7 +17,8 @@ accessTokenSchema = Schema({
     {
         timestamps: {
             createdAt : 'loginAt'
-        }
+        },
+        versionKey: false
     });
 
 //==================================================Exports =========================================================

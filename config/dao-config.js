@@ -6,6 +6,7 @@ const dbConfig  = require("./env").db.mongo,
     mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
+mongoose.set('debug', true);
 mongoose.connect( dbConfig.host , { user : dbConfig.userName , pass : dbConfig.password } );
 
 

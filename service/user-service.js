@@ -2,16 +2,18 @@
  * Created by thinksysuser on 3/10/16.
  */
 
-const userDao = require("../dao/user-dao"),
+const userDao = require("../dao").userDao,
     _ = require("lodash"),
     util = require("../util");
 
 //================================================== Exports =========================================================
 
-module.exports = _.extend( util.constants.EMPTY_OBJECT , userDao ,
-    {
-        generateUserToken
-    });
+module.exports = (function () {
+    return _.extend( {} , userDao ,
+        {
+            generateUserToken
+        });
+})();
 
 //================================================== Implementation ==================================================
 

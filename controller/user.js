@@ -9,15 +9,8 @@ const BaseController = require("./base-controller"),
 class UserController extends BaseController{
 
     login( req , res ){
-        req.app.sendSuccess( res , req.user);
+        req.app.sendSuccess( res , req.token );
     }
-    getUsers(req, res) {
-        this.Model.find().then(function (as) {
-            console.log(as)
-            req.app.sendSuccess( res , { a : 1 });
-        }).catch(function (err) {
-            console.log(err)
-        })
-    }
+
 }
-module.exports = new UserController(User)
+module.exports = new UserController(User);
