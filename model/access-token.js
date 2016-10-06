@@ -5,6 +5,7 @@
 // importing mongoose
 const mongoose = require("mongoose"),
     Schema = mongoose.Schema,
+    toJSONSchema = require('mongoose-jsonschema').modelToJSONSchema,
     constants = require("../util").constants,
     mongooseHidden = require('mongoose-hidden')({ defaultHidden: constants.mongodb.hidden }),
 
@@ -26,6 +27,13 @@ const mongoose = require("mongoose"),
 accessTokenSchema.plugin(mongooseHidden);
 
 
+
+var model = mongoose.model('AccessToken', accessTokenSchema , 'accesstoken');
+
 //==================================================Exports =========================================================
 
-module.exports = mongoose.model('AccessToken', accessTokenSchema , 'accesstoken');
+module.exports = model;
+
+module.exports.toJSON = function () {
+    return toJSONSchema(model);
+}

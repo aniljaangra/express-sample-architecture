@@ -4,6 +4,7 @@
 
 // importing mongoose
 const mongoose = require("mongoose"),
+    toJSONSchema = require('mongoose-jsonschema').modelToJSONSchema,
     constants = require("../util").constants,
     mongooseHidden = require('mongoose-hidden')({ defaultHidden: constants.mongodb.hidden }),
 
@@ -11,7 +12,7 @@ const mongoose = require("mongoose"),
 
     // user model
     userSchema = mongoose.Schema({
-            userId: { type : String , index : { unique : true } },      // username of the user
+            userId: { type : String , index : { unique : true }   },      // username of the user
             password: { type : String , required : true ,  hide : true },      // password of the user
             email : { type : String , required : true },        // email of the user
             firstName : { type : String , required : true },        // first name of the user
@@ -23,10 +24,15 @@ const mongoose = require("mongoose"),
         {
             timestamps: true
         });
-
 //Hide Items if Necessary
 userSchema.plugin(mongooseHidden);
 
+var model = mongoose.model('User', userSchema, 'user');
+
 //==================================================Exports =========================================================
 
-module.exports = mongoose.model('User', userSchema, 'user');
+module.exports = model;
+
+module.exports.toJSON = function () {
+    return toJSONSchema(model);
+}

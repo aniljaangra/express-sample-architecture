@@ -1,110 +1,105 @@
 /**
- * Created by thinksysuser on 4/10/16.
+ * Created by thinksysuser on 6/10/16.
  */
+
+const _ = require("lodash"),
+    baseApiModel = {
+        produces :  [
+            "application/json",
+            "application/xml"
+        ],
+        consumes :  [
+            "application/json",
+            "application/xml"
+        ]
+    },
+    baseParamModel = {
+        required : true ,
+        type : "string"
+    };
+
+//============================================ Exports ======================================
+
+module.exports = { convertToSwagger };
+
+//===========================================================================================
+
 
 /**
- * Created by anil on 5/2/16.
+ * Converts APIs according to swagger Ref
+ * @param apis
  */
-const swagger = require("swagger-node-express"),
-    apis = [],
-    paramTypes = swagger.paramTypes;
+function convertToSwagger(apis) {
+    //Properly Fill All APIs
+    apis = apis.map(function ( api ) {
+        //extend from base model
+        api = _.extend( {} , baseApiModel , api);
+        //set Api type if not present
+        _setApiParamType( api );
+        //Find path param i.e. :id and replace them with {id}
+        api.path = _resolvePathParams( api.path );
+        api.parameters.forEach( function (param) {
+           param = _.extend( {} , baseParamModel , param);
+            param.summary  = !param.summary ? param.description : param.summary;
+            param.notes = !param.notes ? param.description : param.notes;
+            param.in = param.in ? param.in : api.paramType;
+        });
+        return api;
+    });
 
-module.exports = { apis, convertToSwagger  };
+    //creath path Map
+    return _createPathMap(apis);
+};
 
 /**
- * Converts API Specs to Swagger Doc
- *
+ * Set Api Param Type
+ * @param apiObject
+ * @private
  */
-function convertToSwagger(){
-    apis.forEach( function (api) {
-        switch(api.method){
-            case "GET" :
-                swagger.addGet(getSpecs(api));
-                break;
-            case "POST" :
-                swagger.addPost(getSpecs(api));
-                break;
-            case "PUT" :
-                swagger.addPut(getSpecs(api));
-                break;
-            case "DELETE" :
-                swagger.addDelete(getSpecs(api));
-                break;
-        }
-    })
+function _setApiParamType( apiObject ) {
+    if(apiObject.paramType){
+        return;
+    }
+    switch (apiObject){
+        case "GET":
+            apiObject.paramType = "query"; break;
+        case "POST":
+            apiObject.paramType = "form"; break;
+        case "DELETE":
+            apiObject.paramType = "query"; break;
+        case "PUT":
+            apiObject.paramType = "body"; break;
+    }
 }
 
-
-function getSpecs(api){
-    var retVal = {};
-    var spec = {};
-    spec.summary= api.summary;
-    spec.nickname = api.nickname;
-    spec.path = getPath(api.path);
-    if(api.notes){
-        spec.notes= api.notes;
-    }
-//       notes : "Returns a pet based on ID",
-//       summary : "Find pet by ID",
-    spec.method = api.method;
-    if(api.params){
-        spec.parameters = getParameters(api.params, api.paramType);
-    }
-//       responseMessages : [swe.invalid('id'), swe.notFound('pet')]
-//       nickname : "getPetById",
-    //    type : "Pet",
-    spec.produces = ["application/json"];
-    retVal.spec = spec;
-    //logger.VOLATILE(JSON.stringify(retVal));
-    return retVal;
-}
-
-/**
- *  https://github.com/swagger-api/swagger-spec/blob/master/versions/1.2.md#524-parameter-object
- */
-function getParameters(params, type){
-//    parameters : [paramTypes.path("petId", "ID of pet that needs to be fetched", "string")],
-    var retVal = [];
-    for(var i in params){
-        var _type = type;
-        if(params[i].paramType){
-            _type = params[i].paramType;
-        }
-        if(params[i].required === undefined){
-            params[i].required = true;
-        }
-        switch(_type){
-            case "query":
-                retVal.push(paramTypes.query(params[i].name, params[i].desc, params[i].type , params[i].required ));
-                break;
-            case "path":
-                retVal.push(paramTypes.path(params[i].name, params[i].desc, params[i].type ));
-                break;
-            case "body":
-                retVal.push(paramTypes.body(params[i].name, params[i].desc, params[i].type , params[i].required ));
-                break;
-            case "form":
-                retVal.push(paramTypes.form(params[i].name, params[i].desc, params[i].type , params[i].required ));
-                break;
-            case "header":
-                retVal.push(paramTypes.header(params[i].name, params[i].desc, params[i].type , params[i].required ));
-                break;
-        }
-    }
-    return retVal;
+function _createPathMap(apis) {
+    let apiMap = _.groupBy( apis , "path");
+    _.each( apiMap , function (api , key ) {
+        let methodMap = _.groupBy( api , "method");
+        _.each( methodMap , function( method , methodName){
+            methodMap[ methodName.toLowerCase()] = _.first(method) || {};
+        });
+        [ "GET" , "POST" , "PUT" , "DELETE"].forEach( method => delete methodMap[method]);
+        apiMap[key] = methodMap;
+    });
+    return apiMap;
 }
 
 /**
- * converts "/insert/:user/:number" to "/insert/{user}/{number}"
+ * Resolve Path Params
  * @param path
  * @returns {*}
+ * @private
  */
-function getPath(path){
-    var newPath = path;
-    var params = newPath.match(/:[a-z1-9]+/gi);
-    for(var i in params){
-        var param = params[i];
-        newPath = newPath.replace(param, param.replace(":", "{") + "}")
+function _resolvePathParams( path) {
+    //Find Path params i.e. :id replace them with {id}
+    let params = path.match(/:[a-z1-9]+/gi);
+    if(!params){
+        return path;
     }
-    return newPath.replace("","");
+    let newPath = path;
+    params.forEach(function (param) {
+        newPath = newPath.replace(param, param.replace(":", "{") + "}")
+    });
+    return newPath;
 }

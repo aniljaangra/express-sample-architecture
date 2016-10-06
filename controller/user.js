@@ -14,6 +14,18 @@ const util = require("../util"),
  */
 class UserController extends CrudController{
 
+    get LOGIN_SPEC(){
+        return {
+            "nickname" : "getUserProfile",
+            "description" : "login user",
+            "path" : "/user/login",
+            "method": "POST",
+            "parameters" : [
+                { name : "userName", description : "username", required : true ,  type : "string"},
+                { name : "password", description : "User password", required : true , type : "string"}
+            ]
+        };
+    }
     /**
      * Login Handler
      * @param req
@@ -25,7 +37,14 @@ class UserController extends CrudController{
 
     get PROFILE_SPEC(){
         return {
-          a : 1
+            "description" : "get user profile",
+            "path" : "/user/profile",
+            "notes" : "get user complete profile",
+            "summary" : "get user complete profile",
+            "method": "GET",
+            "parameters" : [{ name : "userName", description : "ID of pet that needs to be fetched", type : "string"}],
+            "type" : "User",
+            "nickname" : "getUserProfile"
         };
     }
     /**

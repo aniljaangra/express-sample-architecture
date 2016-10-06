@@ -1,4 +1,4 @@
-var app = require("../util/app");
+var app = require("../../util/app");
 var path = require('path');
 var express = require('express');
 var docs_handler = express.static(path.join(__dirname , '/../node_modules/swagger-ui/dist'));

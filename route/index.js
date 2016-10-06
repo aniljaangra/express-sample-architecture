@@ -19,3 +19,6 @@ v1RouterPrx.get( '/user/profile' ,  passport.verifyUser , User.profile );
 
 //mount to app
 app.use( v1RouterPrx.getRouter() );
+
+swagger.configureHost("localhost:3001" , "" , "/swagger.json" );
+swagger.init(app);

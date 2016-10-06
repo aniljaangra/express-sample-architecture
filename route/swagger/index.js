@@ -1,48 +1,72 @@
 /**
- * Created by thinksysuser on 4/10/16.
+ * Created by thinksysuser on 6/10/16.
  */
 
-var apiInfo = {
-    title: "[appName] APIs",
-    description: "API documentations for [appName]",
-    termsOfServiceUrl: "http://helloreverb.com/terms/",
-    contact: "developers@mobicules.com",
-    license: "Apache 2.0",
-    licenseUrl: "http://www.apache.org/licenses/LICENSE-2.0.html"
-};
+const swaggerJSON = require("./swagger-json") ,
+    _ = require("lodash"),
+    path = require("path"),
+    express = require("express"),
+    models = require("../../model"),
+    swaggerUtil = require("./swagger-util"),
+    apis = [],
+    baseAPIJson = {
 
-function init(apiOptions) {
-    //Set Swagger Properties
-    apiInfo.title = apiInfo.title.replace(appName, apiOptions.name);
-    apiInfo.description = apiInfo.description.replace(appName, apiOptions.name);
+    };
+var _apiDocPath = "/api-docs";
 
-    //Initialize Swagger
-    swagger = require("swagger-node-express")(app);
+module.exports = { apis , init , setInfo , configureHost };
 
-    //Declaration
-    swagger.configureDeclaration(options.name, {
-        description: apiInfo.title,
-        authorizations: ["oauth2"],
-        produces: ["application/json"]
+
+function init( app ) {
+   //Convert Models
+    _convertToSwaggerModels();
+    //convert apis to map
+    swaggerJSON.paths = swaggerUtil.convertToSwagger(apis);
+
+    app.get( _apiDocPath , function (req, res) {
+        res.json(swaggerJSON);
     });
+    var docs_handler = express.static(path.join(__dirname , '../../node_modules/swagger-ui/dist'));
 
-    //Set API Information
-    swagger.setApiInfo(apiInfo);
-
-    //Swagger Page
-    var docs_handler = express.static("/home/thinksysuser/official/repos/express-sample/node_modules/swagger-ui/dist/indx.html");
-    app.get(/^\/docs(\/.*)?$/, function (req, res, next) {
-        if (req.url === '/docs') { // express static barfs on root url w/o trailing slash
-            res.writeHead(302, {'Location': req.url + '/'});
+    app.get(/^\/docs(\/.*)?$/ , function (req, res , next) {
+        if (req.url === '/docs') {
+            res.writeHead(302, { 'Location': req.url + '/' });
             res.end();
             return;
         }
         // take off leading /docs so that connect locates file correctly
         req.url = req.url.substr('/docs'.length);
         return docs_handler(req, res, next);
-    });
-    swagger.configureSwaggerPaths("", "api-docs", "");
-    swaggerUtil.convertToSwagger(swagger, swaggerUtil.apis);
-    swagger.configure(apiOptions.website, "1.0.0");
+    })
 }
 
+/**
+ *
+ * @param info  title | description | version | email | tosUrl | license  { name | url }
+ */
+function setInfo( info ) {
+    info.title ? swaggerJSON.info.title = info.title : null;
+    info.description ? swaggerJSON.info.description = info.description : null;
+    info.version ? swaggerJSON.info.version = info.version : null;
+    info.email ? swaggerJSON.info.email = info.email : null;
+    info.tosUrl ? swaggerJSON.info.tosUrl = info.tosUrl : null;
+    info.license ? swaggerJSON.info.license = info.license : null;
+}
+
+/**
+ *
+ * @param host
+ * @param basePath
+ * @param apiDocPath
+ */
+function configureHost(host, basePath , apiDocPath ) {
+    host ? swaggerJSON.host = host : null;
+    basePath !== undefined ? swaggerJSON.basePath = basePath : null;
+    apiDocPath ? _apiDocPath = apiDocPath : null;
+}
+
+function _convertToSwaggerModels() {
+    _.each(models , function (model) {
+        swaggerJSON.definitions[ model.modelName] = model.toJSON();
+    });
+}
