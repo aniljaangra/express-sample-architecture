@@ -10,6 +10,12 @@ var seq = new Date().getTime();
 module.exports = { log , requestLogger, logResponse  };
 
 function requestLogger(req , res , next){
+
+    if( req.url.indexOf("explorer") != -1){
+        log( "swagger" , req.url);
+        //Skip if logging not required
+        return next();
+    }
     req.received_at = new Date();
     log(['======================= [time] Request ID : ', seq , ' ==========================='  ]);
     logOnRequestReceive( req );
